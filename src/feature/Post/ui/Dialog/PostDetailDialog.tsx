@@ -1,5 +1,5 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../../shared/ui"
-import { highlightText } from "../../../shared/utils"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../../../shared/ui"
+import { highlightText } from "../../../../shared/utils"
 
 interface PostDetailDialogProps{
 

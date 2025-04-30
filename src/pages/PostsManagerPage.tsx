@@ -36,6 +36,10 @@ import { Pagination } from "../shared/ui/Pagination/Pagination"
 import { EditPostDialog } from "../feature/Post/ui/EditPostDialog"
 import { AddPostDialog } from "../feature/Post/ui/AddPostDialog"
 import { PostTable } from "../widgets/ui/PostTable"
+import { SearchPost } from "../feature/Post/ui/SearchPost"
+import { SortBySelect } from "../feature/Post/ui/SortBySelect"
+import { SortByDesc } from "../feature/Post/ui/SortByDesc"
+import { SelectTag } from "../feature/Post/ui/SelectTag"
 
 const PostsManager = () => {
   const navigate = useNavigate()
@@ -348,20 +352,6 @@ const PostsManager = () => {
     setSelectedTag(params.get("tag") || "")
   }, [location.search])
 
-  // 하이라이트 함수 추가
-  const highlightText = (text: string | undefined, highlight: string): React.ReactElement | null => {
-    if (!text) return null
-    if (!highlight.trim()) {
-      return <span>{text}</span>
-    }
-    const regex = new RegExp(`(${highlight})`, "gi")
-    const parts = text.split(regex)
-    return (
-      <span>
-        {parts.map((part, i) => (regex.test(part) ? <mark key={i}>{part}</mark> : <span key={i}>{part}</span>))}
-      </span>
-    )
-  }
 
   // 게시물 테이블 렌더링
   const renderPostTable = () => {
@@ -417,57 +407,27 @@ const PostsManager = () => {
           {/* 검색 및 필터 컨트롤 */}
           <div className="flex gap-4">
             <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="게시물 검색..."
-                  className="pl-8"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyPress={(e) => e.key === "Enter" && searchPosts()}
-                />
-              </div>
+              <SearchPost
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                searchPosts={searchPosts}/>
             </div>
-            <Select
-              value={selectedTag}
-              onValueChange={(value) => {
-                setSelectedTag(value)
-                fetchPostsByTag(value)
-                updateURL()
-              }}
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="태그 선택" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">모든 태그</SelectItem>
-                {tags.map((tag) => (
-                  <SelectItem key={tag.url} value={tag.slug}>
-                    {tag.slug}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="정렬 기준" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">없음</SelectItem>
-                <SelectItem value="id">ID</SelectItem>
-                <SelectItem value="title">제목</SelectItem>
-                <SelectItem value="reactions">반응</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={sortOrder} onValueChange={setSortOrder}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="정렬 순서" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="asc">오름차순</SelectItem>
-                <SelectItem value="desc">내림차순</SelectItem>
-              </SelectContent>
-            </Select>
+            
+            <SelectTag
+              selectedTag={selectedTag}
+              setSelectedTag={setSelectedTag}
+              fetchPostsByTag={fetchPostsByTag}
+              updateURL={updateURL}
+              tags={tags}/>
+            
+            <SortBySelect
+              sortBy={sortBy}
+              setSortBy={setSortBy} />
+
+            <SortByDesc
+              sortOrder={sortOrder}
+              setSortOrder={setSortOrder}/>
+
           </div>
 
           {/* 게시물 테이블 */}
