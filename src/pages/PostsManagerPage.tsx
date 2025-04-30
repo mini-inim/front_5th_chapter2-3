@@ -28,8 +28,8 @@ import {
 
 import { Post, User, Comment, PostsResponse, UsersResponse, CommentsResponse } from "../shared/type"
 import { AddCommentDialog } from "../feature/Comment/ui/AddCommentDialog"
-import { EditCommentDialog } from "../feature/Comment/ui/EditCommentForm"
-import { CommentSection } from "../feature/Comment/ui/CommentSection"
+import { EditCommentDialog } from "../feature/Comment/ui/EditCommentDialog"
+import { CommentSection } from "../widgets/ui/CommentSection"
 
 const PostsManager = () => {
   const navigate = useNavigate()

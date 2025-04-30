@@ -1,6 +1,7 @@
 import { Edit2, Plus, ThumbsUp, Trash2 } from "lucide-react"
-import { Button } from "../../../shared/ui"
-import { highlightText } from "../../../shared/utils";
+import { Button } from "../../shared/ui";
+import { highlightText } from "../../shared/utils";
+
 
 interface CommentSectionProps {
     comments: Record<number, any[]>;
