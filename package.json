@@ -9,8 +9,9 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest",
-    "coverage": "vitest run --coverage"
+    "test": "vitest",    
+    "coverage": "vitest run --coverage",
+    "deploy": "pnpm run build && gh-pages -d dist"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.74.11",
