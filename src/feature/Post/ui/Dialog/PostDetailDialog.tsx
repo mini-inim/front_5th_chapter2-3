@@ -1,7 +1,7 @@
 import { JSX } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../../../shared/ui"
 import { highlightText } from "../../../../shared/utils"
-import { Posts } from "../../model/postTypes";
+import { Posts } from "../../../../entities/Post/model/postTypes";
 
 interface PostDetailDialogProps{
   showPostDetailDialog: boolean

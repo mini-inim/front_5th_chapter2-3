@@ -25,9 +25,9 @@ import { EditPostDialog } from "../feature/Post/ui/Dialog/EditPostDialog"
 import { PostDetailDialog } from "../feature/Post/ui/Dialog/PostDetailDialog"
 import { useQueryParams } from "../hooks/useQueryParams"
 import { useQueryClient } from "@tanstack/react-query"
-import { useUserStore } from "../feature/User/model/userStore"
-import { useCommentStore } from "../feature/Comment/model/commentStore"
-import { usePostStore } from "../feature/Post/model/postStore"
+import { useUserStore } from "../entities/User/model/userStore"
+import { useCommentStore } from "../entities/Comment/model/commentStore"
+import { usePostStore } from "../entities/Post/model/postStore"
 
 const PostsManager = () => {
   const location = useLocation()
