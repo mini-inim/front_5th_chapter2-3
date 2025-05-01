@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Edit2, MessageSquare, Plus, Search, ThumbsDown, ThumbsUp, Trash2 } from "lucide-react"
+import { Plus } from "lucide-react"
 import { useLocation, useNavigate } from "react-router-dom"
 import {
   Button,
@@ -7,23 +7,6 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  Input,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-  Textarea,
 } from "../shared/ui"
 
 import { Post, User, Comment, PostsResponse, UsersResponse, CommentsResponse } from "../shared/type"
@@ -31,18 +14,18 @@ import { AddCommentDialog } from "../feature/Comment/ui/AddCommentDialog"
 import { EditCommentDialog } from "../feature/Comment/ui/EditCommentDialog"
 import { CommentSection } from "../widgets/ui/CommentSection"
 import { UserDetailDialog } from "../feature/User/ui/UserDetailDialog"
-import { PostDetailDialog } from "../feature/Post/ui/PostDetailDialog"
 import { Pagination } from "../shared/ui/Pagination/Pagination"
-import { EditPostDialog } from "../feature/Post/ui/EditPostDialog"
-import { AddPostDialog } from "../feature/Post/ui/AddPostDialog"
 import { PostTable } from "../widgets/ui/PostTable"
 import { SearchPost } from "../feature/Post/ui/SearchPost"
 import { SortBySelect } from "../feature/Post/ui/SortBySelect"
 import { SortByDesc } from "../feature/Post/ui/SortByDesc"
 import { SelectTag } from "../feature/Post/ui/SelectTag"
+import { AddPostDialog } from "../feature/Post/ui/Dialog/AddPostDialog"
+import { EditPostDialog } from "../feature/Post/ui/Dialog/EditPostDialog"
+import { PostDetailDialog } from "../feature/Post/ui/Dialog/PostDetailDialog"
+import { useQueryParams } from "../hooks/useQueryParams"
 
 const PostsManager = () => {
-  const navigate = useNavigate()
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
 
@@ -79,16 +62,7 @@ const PostsManager = () => {
 
 
   // URL 업데이트 함수
-  const updateURL = () => {
-    const params = new URLSearchParams()
-    if (skip) params.set("skip", skip.toString())
-    if (limit) params.set("limit", limit.toString())
-    if (searchQuery) params.set("search", searchQuery)
-    if (sortBy) params.set("sortBy", sortBy)
-    if (sortOrder) params.set("sortOrder", sortOrder)
-    if (selectedTag) params.set("tag", selectedTag)
-    navigate(`?${params.toString()}`)
-  }
+  const { updateURL } = useQueryParams(skip, limit, searchQuery, sortBy, sortOrder, selectedTag);
 
 
   // 게시물 가져오기
