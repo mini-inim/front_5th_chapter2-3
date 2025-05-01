@@ -24,15 +24,12 @@ import { AddPostDialog } from "../feature/Post/ui/Dialog/AddPostDialog"
 import { EditPostDialog } from "../feature/Post/ui/Dialog/EditPostDialog"
 import { PostDetailDialog } from "../feature/Post/ui/Dialog/PostDetailDialog"
 import { useQueryParams } from "../hooks/useQueryParams"
-import { useQueryClient } from "@tanstack/react-query"
 import { useUserStore } from "../entities/User/model/userStore"
 import { useCommentStore } from "../entities/Comment/model/commentStore"
 import { usePostStore } from "../entities/Post/model/postStore"
 
 const PostsManager = () => {
   const location = useLocation()
-  const queryParams = new URLSearchParams(location.search)
-  const queryClient = useQueryClient();
 
   // 전역 상태 관리
   const {
@@ -74,10 +71,9 @@ const PostsManager = () => {
     setShowUserModal,
   } = usePostStore()
   
-  const { selectedUser, setSelectedUser, loading: userLoading } = useUserStore()
+  const { selectedUser, setSelectedUser } = useUserStore()
 
   const { comments, selectedComment, newComment, setComments, setNewComment, setSelectedComment } = useCommentStore()
-  const [, setError] = useState<string|null>(null)
 
 
   // URL 업데이트 함수
@@ -113,20 +109,6 @@ const PostsManager = () => {
       setLoading(false)
     }
   }
-
-  //공통 에러 처리
-  const handleError = (error: Error) => {
-    setError(error.message);
-    console.error("에러 발생: ", error);
-  }
-
-  //공통 캐시 초기화
-  const invalidateQueries = (queryKeys: string[]) => {
-    queryKeys.forEach(key => {
-      queryClient.invalidateQueries({ queryKey: [key] });
-    });
-  };
-
 
   // 태그 가져오기
   const fetchTags = async () => {
