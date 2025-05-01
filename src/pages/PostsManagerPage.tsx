@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Plus } from "lucide-react"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation } from "react-router-dom"
 import {
   Button,
   Card,
@@ -490,7 +490,11 @@ const PostsManager = () => {
 
       {/* 게시물 상세 보기 대화상자 */}
       <PostDetailDialog
-        show
+        showPostDetailDialog = {showPostDetailDialog}
+        setShowPostDetailDialog = { setShowPostDetailDialog}
+        selectedPost = { selectedPost }
+        searchQuery = {searchQuery}
+        renderComments = {renderComments}
       />
 
       {/* 사용자 모달 */}
