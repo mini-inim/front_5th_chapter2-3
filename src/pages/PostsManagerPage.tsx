@@ -257,7 +257,7 @@ const PostsManager = () => {
         [data.postId]: [...(prev[data.postId] || []), data],
       }))
       setShowAddCommentDialog(false)
-      setNewComment({ body: "", postId: null, userId: 1 })
+      setNewComment({ body: "", postId: 0, userId: 1 })
     } catch (error) {
       console.error("댓글 추가 오류:", error)
     }

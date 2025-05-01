@@ -18,7 +18,7 @@ interface CommentState {
         | { [postId: number]: Comment[] },
     ) => void
     setLoading: (loading: boolean) => void
-    setNewComment: (comment: { body: string; postId: number|null; userId: number }) => void
+    setNewComment: (comment: { body: string; postId: number; userId: number }) => void
     setSelectedComment: (comment: Comment | null) => void
   }
 
