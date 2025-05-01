@@ -24,41 +24,60 @@ import { AddPostDialog } from "../feature/Post/ui/Dialog/AddPostDialog"
 import { EditPostDialog } from "../feature/Post/ui/Dialog/EditPostDialog"
 import { PostDetailDialog } from "../feature/Post/ui/Dialog/PostDetailDialog"
 import { useQueryParams } from "../hooks/useQueryParams"
+import { useQueryClient } from "@tanstack/react-query"
+import { useUserStore } from "../feature/User/model/userStore"
+import { useCommentStore } from "../feature/Comment/model/commentStore"
+import { usePostStore } from "../feature/Post/model/postStore"
 
 const PostsManager = () => {
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
+  const queryClient = useQueryClient();
 
-  // 상태 관리
-  const [posts, setPosts] = useState<Post[]>([])
-  const [newPost, setNewPost] = useState({ title: "", body: "", userId: 1 })
-  const [selectedPost, setSelectedPost] = useState<Post | null>(null)
-
-  const [comments, setComments] = useState<Record<number, Comment[]>>({})
-  const [selectedComment, setSelectedComment] = useState<Comment | null>(null)
-  const [newComment, setNewComment] = useState<{ body: string; postId: number | null; userId: number }>({ body: "", postId: null, userId: 1 })
-
-  const [tags, setTags] = useState<{ url: string; slug: string }[]>([])
-  const [selectedTag, setSelectedTag] = useState(queryParams.get("tag") || "")
-
-  const [selectedUser, setSelectedUser] = useState<User|null>(null)
-
-  const [loading, setLoading] = useState(false)
-  const [total, setTotal] = useState(0)
-  const [skip, setSkip] = useState(parseInt(queryParams.get("skip") || "0"))
-  const [limit, setLimit] = useState(parseInt(queryParams.get("limit") || "10"))
+  // 전역 상태 관리
+  const {
+    posts,
+    selectedPost,
+    tags,
+    skip,
+    limit,
+    searchQuery,
+    sortBy,
+    sortOrder,
+    selectedTag,
+    loading,
+    setPosts,
+    setSelectedPost,
+    setTags,
+    setSkip,
+    setLimit,
+    setSearchQuery,
+    setSortBy,
+    setSortOrder,
+    setSelectedTag,
+    setLoading,
+    showEditDialog,
+    setShowEditDialog,
+    total,
+    setTotal,
+    setShowAddDialog,
+    showAddDialog,
+    newPost,
+    setNewPost,
+    showPostDetailDialog,
+    setShowPostDetailDialog,
+    showAddCommentDialog,
+    setShowAddCommentDialog,
+    showEditCommentDialog,
+    setShowEditCommentDialog,
+    showUserModal,
+    setShowUserModal,
+  } = usePostStore()
   
-  const [searchQuery, setSearchQuery] = useState(queryParams.get("search") || "")
-  
-  const [sortBy, setSortBy] = useState(queryParams.get("sortBy") || "")
-  const [sortOrder, setSortOrder] = useState(queryParams.get("sortOrder") || "asc")
- 
-  const [showAddDialog, setShowAddDialog] = useState(false)
-  const [showEditDialog, setShowEditDialog] = useState(false)
-  const [showAddCommentDialog, setShowAddCommentDialog] = useState(false)
-  const [showEditCommentDialog, setShowEditCommentDialog] = useState(false)
-  const [showPostDetailDialog, setShowPostDetailDialog] = useState(false)
-  const [showUserModal, setShowUserModal] = useState(false)
+  const { selectedUser, setSelectedUser, loading: userLoading } = useUserStore()
+
+  const { comments, selectedComment, newComment, setComments, setNewComment, setSelectedComment } = useCommentStore()
+  const [, setError] = useState<string|null>(null)
 
 
   // URL 업데이트 함수
@@ -94,6 +113,19 @@ const PostsManager = () => {
       setLoading(false)
     }
   }
+
+  //공통 에러 처리
+  const handleError = (error: Error) => {
+    setError(error.message);
+    console.error("에러 발생: ", error);
+  }
+
+  //공통 캐시 초기화
+  const invalidateQueries = (queryKeys: string[]) => {
+    queryKeys.forEach(key => {
+      queryClient.invalidateQueries({ queryKey: [key] });
+    });
+  };
 
 
   // 태그 가져오기
@@ -277,7 +309,11 @@ const PostsManager = () => {
       const data = await response.json()
       setComments((prev) => ({
         ...prev,
-        [postId]: prev[postId].map((comment) => (comment.id === data.id ? {...data, likes: comment.likes + 1} : comment)),
+        [postId]: (prev[postId] ?? []).map((comment) =>
+          comment.id === data.id
+            ? { ...comment, ...data, likes: (comment.likes ?? 0) + 1 }
+            : comment
+        ),
       }))
     } catch (error) {
       console.error("댓글 좋아요 오류:", error)
